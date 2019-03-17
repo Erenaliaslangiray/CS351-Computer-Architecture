@@ -1,0 +1,38 @@
+.data
+my_array: .word 4, 8, 15, 16, 23, 42
+.text
+
+la $s0, my_array 	#Array's adress loaded
+addi $s1, $zero, 6 	#len(my_array) = 6
+
+addi $s2,$zero,2 	#For taking mod of 2 i needed fixed value of 2 for mul operation.
+addi $t0, $zero, 0 	#Index = 0
+
+Loop:
+    
+    beq $s1, $t0, Exit 	#Loop's exit condition
+    addi $t1,$zero,0  	#K = 0
+  
+    mul $t5 , $t0 , 4  	#Getting index'th element from array.
+    add $t5 ,$s0 , $t5  
+    lw $a0, 0($t5)
+    addi $t2,$zero,1	#Defined i = 1 so second loop start with i = 2 all the times.
+Loop2:
+    addi $t2,$t2,1  	#i = i + 1 (initially it will be 2)
+    addi $t3,$zero,0	#Resets the index+1 for all loops.
+    addi $t3 , $a0,1	#= index + 1
+    beq $t3, $t2, Loop1ext #Loop2 end condition.
+    srl $t6,$t2,1 	#If statement
+    mul $t7,$s2,$t6	#Mod 2 operation
+    bne $t2,$t7, Loop2
+    addi $t1,$t1,1
+    j Loop2 		#Jump loop2
+ 
+Loop1ext:
+    sll $t4,$t0,2	#Loading the divided solution with these steps.
+    add $t4,$s0,$t4
+    sw $t1, 0($t4)
+    addi $t0,$t0,1
+    j Loop 		#Jumps back to top of the loop.
+   
+Exit: #Ends the programç
